@@ -4,8 +4,7 @@
   "description": "This is a simple app to generate a random image. This app is part of the Udacity Cloud DevOps Engineer Nanodegree capstone project.",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon ./app.js",
-    "test": "test"
+    "start": "nodemon ./app.js"
   },
   "repository": {
     "type": "git",
