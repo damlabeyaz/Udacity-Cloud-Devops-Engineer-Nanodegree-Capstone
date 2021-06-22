@@ -1,0 +1,30 @@
+{
+  "name": "random-image-generator",
+  "version": "1.0.0",
+  "description": "This is a simple app to generate a random image. This app is part of the Udacity Cloud DevOps Engineer Nanodegree capstone project.",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon ./app.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone.git"
+  },
+  "keywords": [
+    "capstone",
+    "devops",
+    "udacity"
+  ],
+  "author": "Damla Beyaz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/issues"
+  },
+  "homepage": "https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone#readme",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7"
+  }
+}
