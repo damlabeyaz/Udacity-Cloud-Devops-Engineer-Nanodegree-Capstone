@@ -2,7 +2,7 @@ FROM node:12.13.1-stretch-slim
 
 WORKDIR /app
 
-COPY app/ /app/blue
+COPY app/ /app/green
 
 RUN echo "Installing node dependencies" && \
     npm install
