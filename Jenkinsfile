@@ -21,8 +21,7 @@ node {
     stage('Building Docker image for blue app') {
         echo 'Building and push Docker image...'
         withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-	     	sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-	     	sh "docker build -t capstone-app-blue app/blue/."
+	     	echo 'Building and push Docker image...'
         }
     }
 }
