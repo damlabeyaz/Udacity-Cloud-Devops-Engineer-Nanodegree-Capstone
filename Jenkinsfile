@@ -20,6 +20,7 @@ node {
 
     stage('Building Docker image') {
         echo 'Building Docker image for blue app'
-        sh 'docker build -t capstone-app-damlabeyaz blue/.'
+        sh 'cd ./app/blue'
+        sh 'docker build -t capstone-app-damlabeyaz .'
     }
 }
