@@ -1,0 +1,330 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "EKS nodes (AMI family: AmazonLinux2, SSH access: false, private networking: false) [created and managed by eksctl]",
+    "Mappings": {
+      "ServicePrincipalPartitionMap": {
+        "aws": {
+          "EC2": "ec2.amazonaws.com",
+          "EKS": "eks.amazonaws.com",
+          "EKSFargatePods": "eks-fargate-pods.amazonaws.com"
+        },
+        "aws-cn": {
+          "EC2": "ec2.amazonaws.com.cn",
+          "EKS": "eks.amazonaws.com",
+          "EKSFargatePods": "eks-fargate-pods.amazonaws.com"
+        },
+        "aws-us-gov": {
+          "EC2": "ec2.amazonaws.com",
+          "EKS": "eks.amazonaws.com",
+          "EKSFargatePods": "eks-fargate-pods.amazonaws.com"
+        }
+      }
+    },
+    "Resources": {
+      "EgressInterCluster": {
+        "Type": "AWS::EC2::SecurityGroupEgress",
+        "Properties": {
+          "Description": "Allow control plane to communicate with worker nodes in group standard-workers (kubelet and workload TCP ports)",
+          "DestinationSecurityGroupId": {
+            "Ref": "SG"
+          },
+          "FromPort": 1025,
+          "GroupId": {
+            "Fn::ImportValue": "eksctl-capstoneclusterdamlabeyaz-cluster::SecurityGroup"
+          },
+          "IpProtocol": "tcp",
+          "ToPort": 65535
+        }
+      },
+      "EgressInterClusterAPI": {
+        "Type": "AWS::EC2::SecurityGroupEgress",
+        "Properties": {
+          "Description": "Allow control plane to communicate with worker nodes in group standard-workers (workloads using HTTPS port, commonly used with extension API servers)",
+          "DestinationSecurityGroupId": {
+            "Ref": "SG"
+          },
+          "FromPort": 443,
+          "GroupId": {
+            "Fn::ImportValue": "eksctl-capstoneclusterdamlabeyaz-cluster::SecurityGroup"
+          },
+          "IpProtocol": "tcp",
+          "ToPort": 443
+        }
+      },
+      "IngressInterClusterCP": {
+        "Type": "AWS::EC2::SecurityGroupIngress",
+        "Properties": {
+          "Description": "Allow control plane to receive API requests from worker nodes in group standard-workers",
+          "FromPort": 443,
+          "GroupId": {
+            "Fn::ImportValue": "eksctl-capstoneclusterdamlabeyaz-cluster::SecurityGroup"
+          },
+          "IpProtocol": "tcp",
+          "SourceSecurityGroupId": {
+            "Ref": "SG"
+          },
+          "ToPort": 443
+        }
+      },
+      "NodeGroup": {
+        "Type": "AWS::AutoScaling::AutoScalingGroup",
+        "Properties": {
+          "DesiredCapacity": "3",
+          "LaunchTemplate": {
+            "LaunchTemplateName": {
+              "Fn::Sub": "${AWS::StackName}"
+            },
+            "Version": {
+              "Fn::GetAtt": [
+                "NodeGroupLaunchTemplate",
+                "LatestVersionNumber"
+              ]
+            }
+          },
+          "MaxSize": "4",
+          "MinSize": "1",
+          "Tags": [
+            {
+              "Key": "Name",
+              "PropagateAtLaunch": "true",
+              "Value": "capstoneclusterdamlabeyaz-standard-workers-Node"
+            },
+            {
+              "Key": "kubernetes.io/cluster/capstoneclusterdamlabeyaz",
+              "PropagateAtLaunch": "true",
+              "Value": "owned"
+            }
+          ],
+          "VPCZoneIdentifier": {
+            "Fn::Split": [
+              ",",
+              {
+                "Fn::ImportValue": "eksctl-capstoneclusterdamlabeyaz-cluster::SubnetsPublic"
+              }
+            ]
+          }
+        },
+        "UpdatePolicy": {
+          "AutoScalingRollingUpdate": {}
+        }
+      },
+      "NodeGroupLaunchTemplate": {
+        "Type": "AWS::EC2::LaunchTemplate",
+        "Properties": {
+          "LaunchTemplateData": {
+            "BlockDeviceMappings": [
+              {
+                "DeviceName": "/dev/xvda",
+                "Ebs": {
+                  "Encrypted": false,
+                  "Iops": 3000,
+                  "Throughput": 125,
+                  "VolumeSize": 80,
+                  "VolumeType": "gp3"
+                }
+              }
+            ],
+            "IamInstanceProfile": {
+              "Arn": {
+                "Fn::GetAtt": [
+                  "NodeInstanceProfile",
+                  "Arn"
+                ]
+              }
+            },
+            "ImageId": "ami-0cfde6d4e50a9037b",
+            "InstanceType": "t2.micro",
+            "MetadataOptions": {
+              "HttpPutResponseHopLimit": 2,
+              "HttpTokens": "optional"
+            },
+            "NetworkInterfaces": [
+              {
+                "DeviceIndex": 0,
+                "Groups": [
+                  {
+                    "Fn::ImportValue": "eksctl-capstoneclusterdamlabeyaz-cluster::SharedNodeSecurityGroup"
+                  },
+                  {
+                    "Ref": "SG"
+                  }
+                ],
+                "NetworkCardIndex": 0
+              }
+            ],
+            "TagSpecifications": [
+              {
+                "ResourceType": "instance",
+                "Tags": [
+                  {
+                    "Key": "Name",
+                    "Value": "capstoneclusterdamlabeyaz-standard-workers-Node"
+                  }
+                ]
+              },
+              {
+                "ResourceType": "volume",
+                "Tags": [
+                  {
+                    "Key": "Name",
+                    "Value": "capstoneclusterdamlabeyaz-standard-workers-Node"
+                  }
+                ]
+              },
+              {
+                "ResourceType": "network-interface",
+                "Tags": [
+                  {
+                    "Key": "Name",
+                    "Value": "capstoneclusterdamlabeyaz-standard-workers-Node"
+                  }
+                ]
+              }
+            ],
+            "UserData": "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"
+          },
+          "LaunchTemplateName": {
+            "Fn::Sub": "${AWS::StackName}"
+          }
+        }
+      },
+      "NodeInstanceProfile": {
+        "Type": "AWS::IAM::InstanceProfile",
+        "Properties": {
+          "Path": "/",
+          "Roles": [
+            {
+              "Ref": "NodeInstanceRole"
+            }
+          ]
+        }
+      },
+      "NodeInstanceRole": {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "sts:AssumeRole"
+                ],
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    {
+                      "Fn::FindInMap": [
+                        "ServicePrincipalPartitionMap",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        "EC2"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "Version": "2012-10-17"
+          },
+          "ManagedPolicyArns": [
+            {
+              "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+            },
+            {
+              "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+            },
+            {
+              "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/AmazonEKS_CNI_Policy"
+            }
+          ],
+          "Path": "/",
+          "Tags": [
+            {
+              "Key": "Name",
+              "Value": {
+                "Fn::Sub": "${AWS::StackName}/NodeInstanceRole"
+              }
+            }
+          ]
+        }
+      },
+      "SG": {
+        "Type": "AWS::EC2::SecurityGroup",
+        "Properties": {
+          "GroupDescription": "Communication between the control plane and worker nodes in group standard-workers",
+          "SecurityGroupIngress": [
+            {
+              "Description": "[IngressInterCluster] Allow worker nodes in group standard-workers to communicate with control plane (kubelet and workload TCP ports)",
+              "FromPort": 1025,
+              "IpProtocol": "tcp",
+              "SourceSecurityGroupId": {
+                "Fn::ImportValue": "eksctl-capstoneclusterdamlabeyaz-cluster::SecurityGroup"
+              },
+              "ToPort": 65535
+            },
+            {
+              "Description": "[IngressInterClusterAPI] Allow worker nodes in group standard-workers to communicate with control plane (workloads using HTTPS port, commonly used with extension API servers)",
+              "FromPort": 443,
+              "IpProtocol": "tcp",
+              "SourceSecurityGroupId": {
+                "Fn::ImportValue": "eksctl-capstoneclusterdamlabeyaz-cluster::SecurityGroup"
+              },
+              "ToPort": 443
+            }
+          ],
+          "Tags": [
+            {
+              "Key": "kubernetes.io/cluster/capstoneclusterdamlabeyaz",
+              "Value": "owned"
+            },
+            {
+              "Key": "Name",
+              "Value": {
+                "Fn::Sub": "${AWS::StackName}/SG"
+              }
+            }
+          ],
+          "VpcId": {
+            "Fn::ImportValue": "eksctl-capstoneclusterdamlabeyaz-cluster::VPC"
+          }
+        }
+      }
+    },
+    "Outputs": {
+      "FeatureLocalSecurityGroup": {
+        "Value": true
+      },
+      "FeaturePrivateNetworking": {
+        "Value": false
+      },
+      "FeatureSharedSecurityGroup": {
+        "Value": true
+      },
+      "InstanceProfileARN": {
+        "Value": {
+          "Fn::GetAtt": [
+            "NodeInstanceProfile",
+            "Arn"
+          ]
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AWS::StackName}::InstanceProfileARN"
+          }
+        }
+      },
+      "InstanceRoleARN": {
+        "Value": {
+          "Fn::GetAtt": [
+            "NodeInstanceRole",
+            "Arn"
+          ]
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AWS::StackName}::InstanceRoleARN"
+          }
+        }
+      }
+    }
+  }
