@@ -11,7 +11,26 @@ In this project I will apply the skills and knowledge which were developed throu
 
 I will develop a CI/CD pipeline with Jenkins for a simple micro service application written in Node.js and take theblue/green deployment strategy. I will also develop further Continuous Integration steps as typographical checking (aka “linting”) to mimic real-world development as much as possible. To make my project stand out, I may also choose to implement other checks such as security scanning, performance testing, smoke testing and promoting the new version of the app.
 
-## Complete Steps
+## My Complete Steps
 
-1. For the Docker application the directions are rather more open-ended. I can choose an application and decided to build a sample app in [Node.js](https://github.com/nodejs) which is a simple web server returning a "Hello World" message.
-2. For this project, I decided to use CircleCI as a CI server. Since I wanted to avoid any on-premise solutions, I decided to not use it locally but use the cloud-hosted solution.
+1. For the Docker application the directions are rather more open-ended. I can choose an application and decided to build a sample app in [Node.js](https://github.com/nodejs) which is a simple web server returning a "Hello World in Blue" message with a blue deployment and "Hello World in Green" message with a green deployment. This shows that I decided for the blue/green deployment strategy.
+
+2. For this project, I decided to use Jenkins on my local machine as a CI server. To set up Jenkins on MacOS, I used [this tutorial](https://coralogix.com/blog/how-to-install-and-configure-jenkins-on-the-mac-os/). If there are any missing writing permissions during the installation with brew, checkout [this](https://apple.stackexchange.com/questions/144785/cannot-update-homebrew-permission-denied) discussion on Stackoverflow.
+
+3. After the installation of Jenkins, I installed some useful Jenkins plugins: Blue Ocean and AWS Steps.
+
+4. Then I configured the AWS Steps plugin in Jenkins so that Jenkins can communicate with AWS. For this step, I firstly created a new IAM Role on AWS with programmatic admin access. Afterwards, I configured Jenkins by adding the credentials by following [this tutorial](https://www.howtoforge.com/how-to-store-aws-user-access-key-and-secret-key-in-jenkins/).
+
+5. I made sure that my AWS CLI tool is configured correctly. I used `aws configure` to do so.
+
+6. The next step was to configure my DockerHub credentials within Jenkins. I followed [this tutorial](https://dzone.com/articles/building-docker-images-to-docker-hub-using-jenkins) to add my DockerHub credentials.
+
+7. For the creation of a Kubernetes cluster I decided to use the AWS EKS service. I wanted to create this cluster from my local machine and learnt that there is a CLI tool called `eksctl` provided by AWS. I installed it on my local MacOS machine following [this tutorial](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html).
+
+8. Then, I created a Kubernetes cluster on AWS EKS with the following script (this may take a while to finish):
+
+```
+eksctl create cluster --name capstoneclusterdamlabeyaz --version 1.16 --nodegroup-name standard-workers --node-type t2.micro --nodes 3 --nodes-min 1 --nodes-max 4 --node-ami auto
+```
+
+9. The command above will create two CloudFormation stacks: the cluster and the node group. The CloudFormation configuration files (which are automatically created) are located in this directory's `infrastructure` sub-folder.
