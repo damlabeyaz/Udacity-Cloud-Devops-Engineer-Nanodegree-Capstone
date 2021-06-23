@@ -18,9 +18,13 @@ node {
         sh 'hadolint ./app/green/Dockerfile'
     }
 
-    stage('Building Docker image') {
-        echo 'Building Docker image for blue app'
-        sh 'cd ./app/blue'
-        sh 'docker build -t capstone-app-damlabeyaz .'
+    stage('Building Docker image for blue app') {
+        echo 'Building Docker image...'
+        sh 'docker build -t capstone app/blue/.'
+    }
+
+    stage('Building Docker image for green app') {
+        echo 'Building Docker image...'
+        sh 'docker build -t capstone app/green/.'
     }
 }
