@@ -7,7 +7,7 @@ const port = 8000
 
 // First route
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Hello world' })
+    res.status(200).json({ message: 'Hello world in Blue' })
 })
 
 // Starting server
