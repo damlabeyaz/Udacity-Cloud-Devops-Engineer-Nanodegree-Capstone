@@ -24,7 +24,7 @@ node {
 	     	sh 'docker login -u $USERNAME -p $PASSWORD'
 	     	sh 'docker build -t capstone-app-blue app/blue/.'
             sh 'docker tag capstone-app-blue capstone-app-blue'
-	     	sh 'docker push capstone-app-blue'
+	     	sh 'docker push damlabeyaz/capstone-app-blue'
         }
     }
 }
