@@ -1,5 +1,5 @@
 node {
-    
+
     stage('Checking out git repo') {
         echo 'Checkout...'
         checkout scm
@@ -42,7 +42,7 @@ node {
 
     stage('Check if EKS clusters are running') {
         echo 'Check if AWS EKS clusters are running...'
-        sh 'eksctl get clusters'
+        sh 'eksctl get clusters --region=us-east-2'
     }
 
     stage('Deploying to AWS EKS') {
