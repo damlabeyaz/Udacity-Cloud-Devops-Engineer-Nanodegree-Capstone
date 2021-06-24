@@ -14,15 +14,15 @@ node {
     
     stage('Linting Dockerfiles') {
         echo 'Linting...'
-        sh 'hadolint ./app/blue/Dockerfile'
-        sh 'hadolint ./app/green/Dockerfile'
+        sh 'hadolint ./blue/Dockerfile'
+        sh 'hadolint ./green/Dockerfile'
     }
 
     stage('Building Docker image for blue app') {
         echo 'Building and push Docker image...'
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 	     	sh 'docker login -u $USERNAME -p $PASSWORD'
-	     	sh 'docker build -t capstone-app-blue app/blue/.'
+	     	sh 'docker build -t capstone-app-blue blue/.'
             sh 'docker tag capstone-app-blue:latest damlabeyaz/capstone-app-blue:latest'
 	     	sh 'docker push damlabeyaz/capstone-app-blue:latest'
         }
@@ -32,7 +32,7 @@ node {
         echo 'Building and push Docker image...'
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 	     	sh 'docker login -u $USERNAME -p $PASSWORD'
-	     	sh 'docker build -t capstone-app-green app/green/.'
+	     	sh 'docker build -t capstone-app-green green/.'
             sh 'docker tag capstone-app-green:latest damlabeyaz/capstone-app-green:latest'
 	     	sh 'docker push damlabeyaz/capstone-app-green:latest'
         }
@@ -48,8 +48,8 @@ node {
         dir ('./') {
         withAWS(credentials: 'Jenkins Capstone User', region: 'us-east-2') {
             sh 'aws eks --region us-east-2 update-kubeconfig --name capstoneclusterdamlabeyaz'
-            sh 'kubectl apply -f app/blue/blue-deployment.json'
-            sh 'kubectl apply -f app/green/green-deployment.json'
+            sh 'kubectl apply -f blue/blue-deployment.json'
+            sh 'kubectl apply -f green/green-deployment.json'
             sh 'kubectl apply -f ./blue-green-switch.json'
             sh 'kubectl get nodes'
             sh 'kubectl get pods'
