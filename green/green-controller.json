@@ -22,7 +22,7 @@
             "containers":[
                {
                   "name":"green",
-                  "image":"damlabeyaz/capstone-app-green",
+                  "image":"damlabeyaz/capstone-green",
                   "ports":[
                      {
                         "name":"http-server",
