@@ -14,10 +14,10 @@ node {
     
     stage('Linting Dockerfiles') {
         echo 'Linting...'
-        sh 'wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.5.0/hadolint-Darwin-x86_64'
-        sh 'chmod +x /bin/hadolint'
-        sh '/bin/hadolint ./blue/Dockerfile'
-        sh '/bin/hadolint ./green/Dockerfile'
+        sh 'wget -O ./hadolint https://github.com/hadolint/hadolint/releases/download/v2.5.0/hadolint-Darwin-x86_64'
+        sh 'chmod +x ./hadolint'
+        sh './hadolint ./blue/Dockerfile'
+        sh './hadolint ./green/Dockerfile'
     }
 
     stage('Building Docker image for blue app') {
