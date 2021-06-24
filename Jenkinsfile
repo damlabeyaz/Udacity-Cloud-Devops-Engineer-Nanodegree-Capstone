@@ -28,7 +28,7 @@ node {
         }
     }
 
-    stage('Building Docker image for blue green') {
+    stage('Building Docker image for green app') {
         echo 'Building and push Docker image...'
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 	     	sh 'docker login -u $USERNAME -p $PASSWORD'
@@ -38,7 +38,7 @@ node {
         }
     }
 
-    stage('Check if EKS clusters are runnong') {
+    stage('Check if EKS clusters are running') {
         echo 'Check if AWS EKS clusters are running...'
         sh 'eksctl get clusters'
     }
@@ -48,8 +48,8 @@ node {
         dir ('./') {
         withAWS(credentials: 'Jenkins Capstone User', region: 'us-east-2') {
             sh 'aws eks --region us-east-2 update-kubeconfig --name capstoneclusterdamlabeyaz'
-            sh 'kubectl apply -f blue/blue-deployment.json'
-            sh 'kubectl apply -f green/green-deployment.json'
+            sh 'kubectl apply -f app/blue/blue-deployment.json'
+            sh 'kubectl apply -f app/green/green-deployment.json'
             sh 'kubectl apply -f ./blue-green-switch.json'
             sh 'kubectl get nodes'
             sh 'kubectl get pods'
