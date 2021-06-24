@@ -37,4 +37,24 @@ node {
 	     	sh 'docker push damlabeyaz/capstone-app-green:latest'
         }
     }
+
+    stage('Check if EKS clusters are runnong') {
+        echo 'Check if AWS EKS clusters are running...'
+        sh 'eksctl get clusters'
+    }
+
+    stage('Deploying to AWS EKS') {
+        echo 'Deploying to AWS EKS...'
+        dir ('./') {
+        withAWS(credentials: 'Jenkins Capstone User', region: 'us-east-2') {
+            sh 'aws eks --region us-east-2 update-kubeconfig --name capstoneclusterdamlabeyaz'
+            sh 'kubectl apply -f blue/blue-deployment.json'
+            sh 'kubectl apply -f green/green-deployment.json'
+            sh 'kubectl apply -f ./blue-green-switch.json'
+            sh 'kubectl get nodes'
+            sh 'kubectl get pods'
+        }
+      }
+    }
+
 }
