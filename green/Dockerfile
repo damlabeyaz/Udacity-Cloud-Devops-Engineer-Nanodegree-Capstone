@@ -1,10 +1,9 @@
-FROM node:14.17.1
 
-WORKDIR /app
+FROM nginx
 
-COPY . /app/
+## Step 1:
+RUN rm /usr/share/nginx/html/index.html
 
-RUN echo "Installing node dependencies" && \
-    npm install
-
-CMD ["/bin/bash", "-c", "npm run start"]
+## Step 2:
+# Copy source code to working directory
+COPY index.html /usr/share/nginx/html
