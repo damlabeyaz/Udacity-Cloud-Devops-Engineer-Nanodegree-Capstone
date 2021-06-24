@@ -27,4 +27,14 @@ node {
 	     	sh 'docker push damlabeyaz/capstone-app-blue:latest'
         }
     }
+
+    stage('Building Docker image for blue green') {
+        echo 'Building and push Docker image...'
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+	     	sh 'docker login -u $USERNAME -p $PASSWORD'
+	     	sh 'docker build -t capstone-app-green app/green/.'
+            sh 'docker tag capstone-app-green:latest damlabeyaz/capstone-app-green:latest'
+	     	sh 'docker push damlabeyaz/capstone-app-green:latest'
+        }
+    }
 }
