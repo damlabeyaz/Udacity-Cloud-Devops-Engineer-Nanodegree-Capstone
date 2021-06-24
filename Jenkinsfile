@@ -23,8 +23,8 @@ node {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 	     	sh 'docker login -u $USERNAME -p $PASSWORD'
 	     	sh 'docker build -t capstone-app-blue app/blue/.'
-            sh 'docker tag capstone-app-blue capstone-app-blue'
-	     	sh 'docker push damlabeyaz/capstone-app-blue'
+            sh 'docker tag capstone-app-blue:latest damlabeyaz/capstone-app-blue:latest'
+	     	sh 'docker push damlabeyaz/capstone-app-blue:latest'
         }
     }
 }
