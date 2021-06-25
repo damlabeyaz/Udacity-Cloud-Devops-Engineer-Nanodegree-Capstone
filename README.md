@@ -69,7 +69,7 @@ The first line tells that it’s an NGINX application with the version `1.21.0`.
 
 ### 6. Create replication controllers for the blue and green pods
 
-Following [this tutorial](https://andresaaap.medium.com/simple-blue-green-deployment-in-kubernetes-using-minikube-b88907b2e267) I created a replication controller for both of my pods (blue and green). [This article](https://www.mirantis.com/blog/kubernetes-replication-controller-replica-set-and-deployments-understanding-replication-options/) describeds well why we should use a replication controller.
+Following [this tutorial](https://andresaaap.medium.com/simple-blue-green-deployment-in-kubernetes-using-minikube-b88907b2e267) I created a replication controller for both of my pods ([blue](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/blue/blue-controller.json) and [green](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/green/green-controller.json)). [This article](https://www.mirantis.com/blog/kubernetes-replication-controller-replica-set-and-deployments-understanding-replication-options/) describes well why we should use a replication controller.
 
 ### 7. Prepare Jenkinsfile - Checkout and Environment Check
 
