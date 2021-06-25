@@ -11,11 +11,18 @@ node {
         sh 'docker -v'
         sh 'eksctl version'
     }
+
+    stage('Lint HTML') {
+        echo 'Linting HTML files...'
+        sh 'tidy -q -e ./blue/*.html'
+        sh 'tidy -q -e ./green/*.html'
+    }
     
     stage('Linting Dockerfiles') {
-        echo 'Linting...'
+        echo 'Downloading hadolint...'
         sh 'wget -O ./hadolint https://github.com/hadolint/hadolint/releases/download/v2.5.0/hadolint-Darwin-x86_64'
         sh 'chmod +x ./hadolint'
+        echo 'Linting Dockerfiles with hadolint...'
         sh './hadolint ./blue/Dockerfile'
         sh './hadolint ./green/Dockerfile'
     }
@@ -34,7 +41,7 @@ node {
         echo 'Building and push Docker image...'
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 	     	sh 'docker login -u $USERNAME -p $PASSWORD'
-	     	sh 'docker build -t damlabeyaz/capstone-green blue/.'
+	     	sh 'docker build -t damlabeyaz/capstone-green green/.'
 	     	sh 'docker tag damlabeyaz/capstone-green damlabeyaz/capstone-green'
 	     	sh 'docker push damlabeyaz/capstone-green'
         }
@@ -55,8 +62,17 @@ node {
             sh 'kubectl apply -f ./blue-green-service.json'
             sh 'kubectl get nodes'
             sh 'kubectl get pods'
+            sh 'kubectl get svc'
         }
       }
     }
 
+    stage('Checking if service is running') {
+        steps{
+            echo 'Checking if service is running'
+            withAWS(credentials: 'Jenkins Capstone User', region: 'us-east-2') {
+                sh 'curl ac5724ee509324674a4a40af42e61f3d-1421565175.us-east-2.elb.amazonaws.com:8000'
+            }
+        }
+    }
 }
