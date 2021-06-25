@@ -44,7 +44,7 @@ I made sure that my **AWS CLI** tool is configured correctly. I used `aws config
 eksctl create cluster --name capstoneclusterdamlabeyaz --version 1.16 --nodegroup-name standard-workers --node-type t2.micro --nodes 3 --nodes-min 1 --nodes-max 4 --node-ami auto --region=use-east-2
 ```
 
-* The command above will create two CloudFormation scripts ([SCREENSHOT5](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT5.png)): the [cluster](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/infrastructure/eks-cluster.json) and the [node group](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/infrastructure/nodegroup.json). These can be used to create the cluster if the usage of `eksctl` is not allowed somehow.
+* The command above will create two CloudFormation scripts ([SCREENSHOT5](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT5.png)): the [cluster](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/infrastructure/eks-cluster.json) and the [node group](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/infrastructure/nodegroup.json).
 
 ### 4. Choose a deployment strategy
 
