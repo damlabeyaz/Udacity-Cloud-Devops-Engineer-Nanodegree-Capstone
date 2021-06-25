@@ -208,3 +208,7 @@ stage('Checking if service is running') {
 ```
 
 The results are promising ([SCREENSHOT17](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT17.png)).
+
+## Credits
+
+I want to thank [Udacity](https://www.udacity.com/) for for this nice program. I learnt a lot and I am very excited now to use my freshly aquired skills in the industry. I also want to thank [Alvaro Andres Pinzon Cortes](https://github.com/andresaaap) since I used his articles on Medium and his repositories on GitHub as learning material and inspiration for the capstone challenge. And of course a big shoutout to my family and husband who always supported during the program.
