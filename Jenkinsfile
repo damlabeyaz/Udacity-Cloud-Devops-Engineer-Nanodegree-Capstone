@@ -68,11 +68,9 @@ node {
     }
 
     stage('Checking if service is running') {
-        steps{
-            echo 'Checking if service is running'
-            withAWS(credentials: 'Jenkins Capstone User', region: 'us-east-2') {
-                sh 'curl ac5724ee509324674a4a40af42e61f3d-1421565175.us-east-2.elb.amazonaws.com:8000'
-            }
+        echo 'Checking if service is running'
+        withAWS(credentials: 'Jenkins Capstone User', region: 'us-east-2') {
+            sh 'curl ac5724ee509324674a4a40af42e61f3d-1421565175.us-east-2.elb.amazonaws.com:8000'
         }
     }
 }
