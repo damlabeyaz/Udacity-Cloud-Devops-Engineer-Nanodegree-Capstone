@@ -63,7 +63,6 @@ node {
             sh 'kubectl get pods'
             sh 'kubectl get svc'
         }
-      }
     }
 
     stage('Checking if service is running') {
