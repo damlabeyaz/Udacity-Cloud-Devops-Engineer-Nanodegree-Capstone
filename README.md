@@ -110,11 +110,11 @@ stage('Linting Dockerfiles') {
 }
 ```
 
-To prove that my linting step in the pipeline is working I added a random string and let my pipeline fail due to a wrong linting ([SCREENSHOT8](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT8.png)).
+To prove that my linting step in the pipeline is working I added a random string and let my pipeline fail due to a wrong linting ([SCREENSHOT8](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT8.png)). Then I corrected the Dockerfile again and saw that my linting worked ([SCREENSHOT9](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT9.png)).
 
 ### 9. Prepare Jenkinsfile - Docker image build and push
 
-After the linting, we build and push the docker images for both blue ([SCREENSHOT9](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT9.png)) and green app ([SCREENSHOT10](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT10.png)) to DockerHub:
+After the linting, we build and push the docker images for both blue ([SCREENSHOT10](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT10.png)) and green app ([SCREENSHOT11](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT11.png)) to DockerHub:
 
 ```
 stage('Building Docker image for blue app') {
@@ -138,11 +138,11 @@ stage('Building Docker image for green app') {
 }
 ```
 
-Afterwards I checked and could see that my images were sucessfully pushed to DockerHub ([SCREENSHOT11](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT11.png)).
+Afterwards I checked and could see that my images were sucessfully pushed to DockerHub ([SCREENSHOT12](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT12.png)).
 
 ### 10. Prepare Jenkinsfile - Check and deploy blue deployment
 
-Now, we are ready to deploy our application to AWS EKS. Firstly, I check if the cluster is up and running ([SCREENSHOT12](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT12.png)):
+Now, we are ready to deploy our application to AWS EKS. Firstly, I check if the cluster is up and running ([SCREENSHOT13](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT13.png)):
 
 ```
 stage('Check if EKS clusters are running') {
@@ -151,7 +151,7 @@ stage('Check if EKS clusters are running') {
 }
 ```
 
-Then I update my cluster information with `kubeconfig` and deploy the blue application and afterwards the green application ([SCREENSHOT13](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT13.png)). With the file `blue-green-service.json` we create a Load Balancer for our application so that we can route between the blue and green deployment:
+Then I update my cluster information with `kubeconfig` and deploy the blue application and afterwards the green application ([SCREENSHOT14](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT14.png)). With the file `blue-green-service.json` we create a Load Balancer for our application so that we can route between the blue and green deployment:
 
 ```
 stage('Deploying to AWS EKS') {
@@ -170,9 +170,9 @@ stage('Deploying to AWS EKS') {
 }
 ```
 
-The command `kubectl get svc` will show us the URL of our Load Balancer ([SCREENSHOT14](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT14.png)).
+The command `kubectl get svc` will show us the URL of our Load Balancer ([SCREENSHOT15](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT15.png)).
 
-We can call the blue version of our app in a browser with the given URL and can see that it was sucessfully deployed ([SCREENSHOT15](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT15.png))
+We can call the blue version of our app in a browser with the given URL and can see that it was sucessfully deployed ([SCREENSHOT16](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT16.png))
 
 ### 11. Change service to green deployment
 
@@ -192,7 +192,7 @@ to
 },
 ```
 
-in our `blue-green-service.json` file. Afterwards, we run `kubectl apply -f ./blue-green-service.json` again and can see the green deployment in our browser ([SCREENSHOT16](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT16.png)).
+in our `blue-green-service.json` file. Afterwards, we run `kubectl apply -f ./blue-green-service.json` again and can see the green deployment in our browser ([SCREENSHOT17](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT17.png)).
 
 ### 12. Smoke testing
 
@@ -207,8 +207,8 @@ stage('Checking if service is running') {
 }
 ```
 
-The results are promising ([SCREENSHOT17](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT17.png)). I also checked out the created EC2 instances ([SCREENSHOT18](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT6.png)) to see if they are up and running.
+The results are promising ([SCREENSHOT18](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT18.png)). I also checked out the created EC2 instances ([SCREENSHOT19](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT19.png)) to see if they are up and running.
 
 ## Credits
 
-I want to thank [Udacity](https://www.udacity.com/) for for this nice program. I learnt a lot and I am very excited now to use my freshly aquired skills in the industry. I also want to thank [Alvaro Andres Pinzon Cortes](https://github.com/andresaaap) since I used his articles on Medium and his repositories on GitHub as learning material and inspiration for the capstone challenge. And of course a big shoutout to my family and husband who always supported me during the program.
+I want to thank [Udacity](https://www.udacity.com/) for for this nice program. I learnt a lot and I am very excited now to use my freshly aquired skills in the industry. I also want to thank [Alvaro Andres Pinzon Cortes](https://github.com/andresaaap) since I used his articles on Medium and his repositories on GitHub as learning material and inspiration for the capstone challenge. And of course a big shoutout to my family and husband who always supports me (I love you!).
