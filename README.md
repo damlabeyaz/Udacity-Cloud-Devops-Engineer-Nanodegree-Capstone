@@ -52,7 +52,7 @@ We were allowed to choose between a **blue/green** and **rolling** deployment st
 
 ### 5. Create Dockerfiles
 
-Since I chose a blue/green deployment, I created two Dockerfiles for each app (blue and green):
+Since I chose a blue/green deployment, I created two Dockerfiles for each app ([blue](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/blue/Dockerfile) and [green](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/green/Dockerfile)):
 
 ```
 FROM nginx:1.21.0
