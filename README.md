@@ -9,7 +9,7 @@ In this project I will apply the skills and knowledge which were developed throu
 * Building Kubernetes clusters
 * Building Docker containers in pipelines
 
-I will develop a CI/CD pipeline with Jenkins for a simple website and will use the blue/green deployment strategy. I will also develop further Continuous Integration steps as typographical checking (aka “linting”) to mimic real-world development as much as possible.
+I will develop a CI/CD pipeline with Jenkins for a simple website and will use the blue/green deployment strategy. I will also develop further Continuous Integration steps as typographical checking (aka “linting”) to mimic real-world development as much as possible. To make my project stand out, I also choose to implement other checks such as the environment check and smoke testing.
 
 ## URL
 Here is the URL for my deployed application (green stage): http://ac5724ee509324674a4a40af42e61f3d-1421565175.us-east-2.elb.amazonaws.com:8000/
