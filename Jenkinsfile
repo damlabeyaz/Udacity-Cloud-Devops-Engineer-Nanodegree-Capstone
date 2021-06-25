@@ -54,7 +54,6 @@ node {
 
     stage('Deploying to AWS EKS') {
         echo 'Deploying to AWS EKS...'
-        dir ('./') {
         withAWS(credentials: 'Jenkins Capstone User', region: 'us-east-2') {
             sh 'aws eks --region us-east-2 update-kubeconfig --name capstoneclusterdamlabeyaz'
             sh 'kubectl apply -f blue/blue-controller.json'
