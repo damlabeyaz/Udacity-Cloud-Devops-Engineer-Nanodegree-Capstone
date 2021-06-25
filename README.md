@@ -22,21 +22,21 @@ In the following section I describe in which order I worked to complete the proj
 
 * For this project, I decided to use Jenkins on my local MacOS machine as a CI server. Of course, a student can create an AWS EC2 instance and install Jenkins there but to speed up my debugging I decided for the on-premise solution. If you want to have a cloud-based solution, just instantiate an AWS EC2 instance, SSH into it and complete the same steps.
 
-* To set up Jenkins on MacOS, I used [this tutorial](https://coralogix.com/blog/how-to-install-and-configure-jenkins-on-the-mac-os/). If there are any missing writing permissions during the installation with brew, checkout [this](https://apple.stackexchange.com/questions/144785/cannot-update-homebrew-permission-denied) discussion on Stackoverflow.
+* To set up Jenkins on MacOS, I used [this tutorial](https://coralogix.com/blog/how-to-install-and-configure-jenkins-on-the-mac-os/). If there are any missing writing permissions during the installation with `brew`, checkout [this](https://apple.stackexchange.com/questions/144785/cannot-update-homebrew-permission-denied) discussion on Stackoverflow.
 
 * After the installation of Jenkins, I installed some useful Jenkins plugins, like [Blue Ocean](https://www.jenkins.io/projects/blueocean/) and [AWS Steps](https://www.jenkins.io/doc/pipeline/steps/pipeline-aws/).
 
-* Then I configured the AWS Steps plugin in Jenkins so that Jenkins can communicate with AWS. For this step, I firstly created a new *IAM User* on AWS with programmatic admin access called *capstone-user* ( [SCREENSHOT1](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT1.png)). Afterwards, I configured Jenkins by adding the credentials ([SCREENSHOT2](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT2.png)) by following [this tutorial](https://www.howtoforge.com/how-to-store-aws-user-access-key-and-secret-key-in-jenkins/).
+* Then I configured the **AWS Steps** plugin in Jenkins so that Jenkins can communicate with AWS. For this step, I firstly created a new **IAM User** on AWS with programmatic admin access called `capstone-user` ([SCREENSHOT1](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT1.png)). Afterwards, I configured Jenkins by adding the credentials ([SCREENSHOT2](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT2.png)) by following [this tutorial](https://www.howtoforge.com/how-to-store-aws-user-access-key-and-secret-key-in-jenkins/).
 
-* The next step was to configure my DockerHub credentials within Jenkins ([SCREENSHOT3](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT3.png)). I followed [this tutorial](https://dzone.com/articles/building-docker-images-to-docker-hub-using-jenkins) to add my DockerHub credentials.
+* The next step was to configure my **DockerHub** credentials within Jenkins ([SCREENSHOT3](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT3.png)). I followed [this tutorial](https://dzone.com/articles/building-docker-images-to-docker-hub-using-jenkins) to add my DockerHub credentials to Jenkins.
 
 ### 2. Configure AWS CLI
 
-I made sure that my AWS CLI tool is configured correctly. I used `aws configure` to do so and added the key and secret from my newly created user to the configuration.
+I made sure that my **AWS CLI** tool is configured correctly. I used `aws configure` to do so and added the key and secret from my newly created user to the configuration. [Here](https://docs.aws.amazon.com/cli/latest/reference/configure/) is a good tutorial on how to configure AWS CLI.
 
 ### 3. Create Kubernetes Cluster
 
-* For the creation of a Kubernetes cluster I decided to use the AWS EKS service. I wanted to create this cluster from my local machine and learnt that there is a CLI tool called `eksctl` provided by AWS. I installed it on my local MacOS machine following [this tutorial](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html).
+* For the creation of a Kubernetes cluster I decided to use the **AWS EKS** service. I wanted to create this cluster from my local machine and learnt that there is a CLI tool called `eksctl` provided by AWS. I installed it on my local MacOS machine by following [this tutorial](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html).
 
 * Then, I created a Kubernetes cluster on AWS EKS with the following script ([SCREENSHOT4](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT4.png)):
 
@@ -44,11 +44,11 @@ I made sure that my AWS CLI tool is configured correctly. I used `aws configure`
 eksctl create cluster --name capstoneclusterdamlabeyaz --version 1.16 --nodegroup-name standard-workers --node-type t2.micro --nodes 3 --nodes-min 1 --nodes-max 4 --node-ami auto --region=use-east-2
 ```
 
-* The command above will create two CloudFormation scripts ([SCREENSHOT5](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT5.png)): the [cluster](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/infrastructure/eks-cluster.json) and the [node group](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/infrastructure/nodegroup.json). These can be used to create the cluster if the usage of `eksctl` is not allowed.
+* The command above will create two CloudFormation scripts ([SCREENSHOT5](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT5.png)): the [cluster](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/infrastructure/eks-cluster.json) and the [node group](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/infrastructure/nodegroup.json). These can be used to create the cluster if the usage of `eksctl` is not allowed somehow.
 
 ### 4. Choose a deployment strategy
 
-We were allowed to choose between a blue/green and rolling deployment strategy. I decided to use the *blue//green deployment strategy* since we also practice this in our company. During my research, I found a good [article by Alvaro Andres Pinzon Cortes](https://andresaaap.medium.com/simple-blue-green-deployment-in-kubernetes-using-minikube-b88907b2e267) who describes how to realize a blue/green deployment with Kubernetes.
+We were allowed to choose between a **blue/green** and **rolling** deployment strategy. I decided to use the **blue/green deployment strategy** since we also practice this in our company. During my research, I found a good [article by Alvaro Andres Pinzon Cortes](https://andresaaap.medium.com/simple-blue-green-deployment-in-kubernetes-using-minikube-b88907b2e267) on how to realize a blue/green deployment with Kubernetes.
 
 ### 5. Create Dockerfiles
 
@@ -65,7 +65,7 @@ RUN rm /usr/share/nginx/html/index.html
 COPY index.html /usr/share/nginx/html
 ```
 
-The first line tells it that it’s an NGINX application with the version `1.21.0`. You can also leave out the version but I prefer to write it. In the first step we remove the existing `index.html` file from the NGINX application and in the second step we copy our `index.html` file into NGINX' directory.
+The first line tells that it’s an NGINX application with the version `1.21.0`. You can also leave out the version but I prefer to write it. In the first step we remove the existing `index.html` file from the NGINX application and in the second step we copy our `index.html` file into NGINX' directory.
 
 ### 6. Create replication controllers for the blue and green pods
 
@@ -110,7 +110,7 @@ stage('Linting Dockerfiles') {
 }
 ```
 
-To prove that my linting is working I added a random string and let my pipeline fail due to a wrong linting ([SCREENSHOT8](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT8.png)).
+To prove that my linting step in the pipeline is working I added a random string and let my pipeline fail due to a wrong linting ([SCREENSHOT8](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT8.png)).
 
 ### 9. Prepare Jenkinsfile - Docker image build and push
 
@@ -138,7 +138,7 @@ stage('Building Docker image for green app') {
 }
 ```
 
-Afterwards I checked and could see that my images sucessfully pushed to DockerHub ([SCREENSHOT11](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT11.png)).
+Afterwards I checked and could see that my images were sucessfully pushed to DockerHub ([SCREENSHOT11](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT11.png)).
 
 ### 10. Prepare Jenkinsfile - Check and deploy blue deployment
 
@@ -170,11 +170,11 @@ stage('Deploying to AWS EKS') {
 }
 ```
 
-The command `kubectl get svc` will show us the URL of our Load Balancer ([SCREENSHOT14](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT14.png)). This can be used to call our blue deployment.
+The command `kubectl get svc` will show us the URL of our Load Balancer ([SCREENSHOT14](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT14.png)).
 
-We can call the blue version of our app in a browser and can see that it was sucessfully deployed ([SCREENSHOT15](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT15.png))
+We can call the blue version of our app in a browser with the given URL and can see that it was sucessfully deployed ([SCREENSHOT15](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT15.png))
 
-### 10. Change service to green deployment
+### 11. Change service to green deployment
 
 To change our service from blue to green, we simply need to change 
 
@@ -194,17 +194,15 @@ to
 
 in our `blue-green-service.json` file. Afterwards, we run `kubectl apply -f ./blue-green-service.json` again and can see the green deployment in our browser ([SCREENSHOT16](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT16.png)).
 
-### 11. Smoke testing
+### 12. Smoke testing
 
 This was not a required step, but I recommend to make a simple smoke test. That's why I added one to my pipeline:
 
 ```
 stage('Checking if service is running') {
-    steps{
-        echo 'Checking if service is running'
-        withAWS(credentials: 'Jenkins Capstone User', region: 'us-east-2') {
-            sh 'curl ac5724ee509324674a4a40af42e61f3d-1421565175.us-east-2.elb.amazonaws.com:8000'
-        }
+    echo 'Checking if service is running'
+    withAWS(credentials: 'Jenkins Capstone User', region: 'us-east-2') {
+        sh 'curl ac5724ee509324674a4a40af42e61f3d-1421565175.us-east-2.elb.amazonaws.com:8000'
     }
 }
 ```
