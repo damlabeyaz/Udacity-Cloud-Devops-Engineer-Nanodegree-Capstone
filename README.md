@@ -207,7 +207,7 @@ stage('Checking if service is running') {
 }
 ```
 
-The results are promising ([SCREENSHOT17](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT17.png)).
+The results are promising ([SCREENSHOT17](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT17.png)). I also checked out the created EC2 instances ([SCREENSHOT18](https://github.com/damlabeyaz/Udacity-Cloud-Devops-Engineer-Nanodegree-Capstone/blob/main/screenshots/SCREENSHOT6.png)) to see if they are up and running.
 
 ## Credits
 
